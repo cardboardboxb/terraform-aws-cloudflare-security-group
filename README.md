@@ -15,15 +15,17 @@ Usage
 module "cloudflare-ips" {
   source = "github.com/orzarchi/terraform-aws-cloudflare-security-group"
 
-  security_group_id = "${aws_security_group.cloudflare.id}"
-  enabled= "${var.use_cloudflare}"
+  security_group_id = aws_security_group.cloudflare.id
+  enabled= var.use_cloudflare
 }
 ```
 
 Variables
 --------
-
-* security_group_id: An existing security group to populate with cloudflare ips as ingress rules.
-* schedule_expression: The cloudwatch schedule expression used to run the updater lambda. Defaults to every day at 20:00.
-* enabled (Optional) - whether to do anything at all, useful if cloudflare is not needed on all environments. 
-Accepts the string "true" or "false". Defaults to "true"
+| Name | Type | Description | Default | Required |
+|-----|:-----:|-----|:-----:|:-----:|
+| `security_group_id` | `string` | An existing security group to populate with cloudflare ips as ingress rules. | - | Yes |
+| `enabled` | `bool` | Whether to do anything at all, useful if cloudflare is not needed on all environments. | true | No |
+| `enabled_egress_http` | `bool` | Whether to assign egress on port 80 tcp. | true | No |
+| `enabled_egress_https` | `bool` | Whether to assign egress on port 443 tcp. | true | No |
+| `schedule_expression` | `string` | The cloudwatch schedule expression used to run the updater lambda.  | cron(0 20 * * ? *) | No |
