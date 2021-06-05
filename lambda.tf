@@ -1,7 +1,8 @@
 resource "aws_cloudwatch_log_group" "lambda-log-group" {
   count = var.enabled == true ? 1 : 0
 
-  name = "UpdateCloudflareIps"
+  name              = "/aws/lambda/UpdateCloudflareIps"
+  retention_in_days = 30
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
@@ -94,4 +95,9 @@ resource "aws_lambda_function" "update-ips" {
       SECURITY_GROUP_ID = var.security_group_id
     }
   }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.policy,
+    aws_cloudwatch_log_group.lambda-log-group,
+  ]
 }
